@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft MR 26.3 - Oda İçi Blok & Bakır Golem</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #111827; font-family: 'Segoe UI', sans-serif; color: white; }
+        #info {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            text-align: center; background: rgba(0,0,0,0.8); padding: 15px 25px;
+            border-radius: 12px; border: 2px solid #d97736; z-index: 10; width: 85%; max-width: 600px;
+        }
+        h2 { margin: 0 0 8px 0; color: #f59e0b; font-size: 1.2rem; }
+        p { margin: 4px 0; font-size: 0.9rem; color: #e5e7eb; }
+        .controls-hint { margin-top: 10px; font-size: 0.8rem; color: #6ee7b7; }
+        
+        /* Özel Büyük VR/MR Giriş Butonu */
+        #xr-btn {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            padding: 18px 36px; font-size: 1.3rem; font-weight: bold;
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            color: white; border: 3px solid #86efac; border-radius: 16px;
+            cursor: pointer; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            transition: transform 0.1s;
+        }
+        #xr-btn:active { transform: translateX(-50%) scale(0.95); }
+        #status-msg {
+            position: absolute; bottom: 110px; left: 50%; transform: translateX(-50%);
+            background: rgba(220, 38, 38, 0.9); padding: 8px 16px; border-radius: 8px;
+            font-size: 0.85rem; display: none; z-index: 999; text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>⛏️ Minecraft MR (26.3 Bakır Sürümü)</h2>
+        <p id="selected-text">Seçili: <b style="color:#fbbf24">Çimen Bloğu</b></p>
+        <div class="controls-hint">
+            <b>Sağ Tetik:</b> Blok Koy / Golem Çağır &nbsp;|&nbsp; 
+            <b>Sol Tetik / A-X:</b> Blok Değiştir &nbsp;|&nbsp; 
+            <b>Yan Tuş (Grip):</b> Blok Kır
+        </div>
+    </div>
+
+    <div id="status-msg"></div>
+    <button id="xr-btn">🥽 VR / MR'A GİR</button>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        let scene, camera, renderer;
+        let controller1, controller2;
+        let reticle;
+        const placedBlocks = [];
+        const golems = [];
+        
+        const blockTypes = [
+            { name: "Çimen Bloğu", color: 0x559e41 },
+            { name: "Meşe Tahtası", color: 0x9c7f4e },
+            { name: "Kırıktaş", color: 0x7a7a7a },
+            { name: "Bakır Blok (26.3)", color: 0xd97736 },
+            { name: "Oksitlenmiş Bakır", color: 0x4ea
